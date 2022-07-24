@@ -6,7 +6,7 @@ export class MyRoom extends Room<MyRoomState> {
   onCreate (options: any) {
     this.setState(new MyRoomState());
     this.onMessage("request_spin", (client, message) => {
-        let result = this.getRandomInt(100);
+        let result = this.getRandomInt(7);
         this.send(client,"respond_spin",result);
         this.broadcast("respond_broadcast_spin",result);
     });

@@ -26,3 +26,4 @@ class MyRoom extends colyseus_1.Room {
     }
 }
 exports.MyRoom = MyRoom;
+//# sourceMappingURL=MyRoom.js.map

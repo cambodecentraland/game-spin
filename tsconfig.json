@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
+    "outDir": "dist",
     "target": "es6",
     "module": "commonjs",
     "strict": true,
     "allowJs": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
     "strictNullChecks": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
+    "baseUrl": ".",
     "forceConsistentCasingInFileNames": true
   },
   "include": [

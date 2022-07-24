@@ -18,3 +18,4 @@ __decorate([
     schema_1.type("string")
 ], MyRoomState.prototype, "mySynchronizedProperty", void 0);
 exports.MyRoomState = MyRoomState;
+//# sourceMappingURL=MyRoomState.js.map

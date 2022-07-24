@@ -37,3 +37,4 @@ exports.default = arena_1.default({
          */
     }
 });
+//# sourceMappingURL=arena.config.js.map
