@@ -10,12 +10,12 @@ export class MyRoom extends Room<MyRoomState> {
     
     this.onMessage("request_spin", async(client, message) => {
         let result = this.getRandomInt(7);
-        this.send(client,"respond_spin",result);
+        client.send("respond_spin",result);
         this.broadcast("respond_broadcast_spin",result);
 
-        console.log(client.auth);
+        console.log(message);
 
-        let address = client.auth;
+        let address = message;
         let totalScore = 0;
         const singleUserDocRef = doc(usersCol, address)
 
@@ -25,7 +25,7 @@ export class MyRoom extends Room<MyRoomState> {
         if (singleUser) {
           console.log(singleUser.userId)
           totalScore = singleUser.score + result;
-          this.send(client,"respond_total_score",totalScore);
+          client.send("respond_total_score",totalScore);
           await updateDoc(singleUserDocRef, {
             score : totalScore
           })
@@ -39,6 +39,28 @@ export class MyRoom extends Room<MyRoomState> {
         }
 
     });
+
+    this.onMessage("pull_score", async(client, message) => {
+      let address = message;
+      let totalScore = 0;
+      const singleUserDocRef = doc(usersCol, address)
+
+      const singleUserDoc = await getDoc(singleUserDocRef)
+      const singleUser = singleUserDoc.data()
+
+      if (singleUser) {
+        console.log(singleUser.userId)
+        totalScore = singleUser.score ;
+        client.send("respond_total_score",totalScore);
+      }  
+      else{
+        await setDoc(singleUserDocRef, {
+          userId : address,
+          name:address,
+          score:0
+        })
+      }
+  });
 
   }
 
