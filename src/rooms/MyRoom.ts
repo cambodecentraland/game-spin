@@ -16,7 +16,7 @@ export class MyRoom extends Room<MyRoomState> {
         console.log(client.auth);
 
         let address = client.auth;
-        let finalScore = 0;
+        let totalScore = 0;
         const singleUserDocRef = doc(usersCol, address)
 
         const singleUserDoc = await getDoc(singleUserDocRef)
@@ -24,9 +24,10 @@ export class MyRoom extends Room<MyRoomState> {
 
         if (singleUser) {
           console.log(singleUser.userId)
-          finalScore = singleUser.score + result;
+          totalScore = singleUser.score + result;
+          this.send(client,"respond_total_score",totalScore);
           await updateDoc(singleUserDocRef, {
-            score : finalScore
+            score : totalScore
           })
         }  
         else{

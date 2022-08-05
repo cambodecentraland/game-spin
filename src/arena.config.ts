@@ -66,7 +66,7 @@ export default Arena({
               {
                     try {
                         await runChecks(req, VALID_PARCEL)
-                        return res.status(200).send({ valid: true, msg: 'Valid request',score:score })
+                        return res.status(200).send({ valid: true, msg: 'Valid request',total_score:score })
                     } catch (error) {
                         console.log(error)
                         return res
