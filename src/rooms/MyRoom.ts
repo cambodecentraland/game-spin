@@ -1,14 +1,42 @@
 import { Room, Client } from "colyseus";
 import { MyRoomState } from "./schema/MyRoomState";
+import { doc, getDoc, getDocs, setDoc, updateDoc } from '@firebase/firestore'
+import { usersCol } from "../database/useDb"; 
 
 export class MyRoom extends Room<MyRoomState> {
 
   onCreate (options: any) {
     this.setState(new MyRoomState());
-    this.onMessage("request_spin", (client, message) => {
+    
+    this.onMessage("request_spin", async(client, message) => {
         let result = this.getRandomInt(7);
         this.send(client,"respond_spin",result);
         this.broadcast("respond_broadcast_spin",result);
+
+        console.log(client.auth);
+
+        let address = client.auth;
+        let finalScore = 0;
+        const singleUserDocRef = doc(usersCol, address)
+
+        const singleUserDoc = await getDoc(singleUserDocRef)
+        const singleUser = singleUserDoc.data()
+
+        if (singleUser) {
+          console.log(singleUser.userId)
+          finalScore = singleUser.score + result;
+          await updateDoc(singleUserDocRef, {
+            score : finalScore
+          })
+        }  
+        else{
+          await setDoc(singleUserDocRef, {
+            userId : address,
+            name:address,
+            score:0
+          })
+        }
+
     });
 
   }

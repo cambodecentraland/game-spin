@@ -8,6 +8,9 @@ import dcl, { express as dclExpress } from 'decentraland-crypto-middleware'
 import { runChecks } from './security/securityChecks'
 import { VALID_SIGNATURE_TOLERANCE_INTERVAL_MS, Metadata } from './utils'
 
+import { doc, getDoc, getDocs, setDoc, updateDoc } from '@firebase/firestore'
+import { usersCol } from "./database/useDb";
+
 export const VALID_PARCEL: number[] = [1, 1]
 
 /**
@@ -43,10 +46,27 @@ export default Arena({
               console.log('addres : ',address);
               console.log('metadata : ',metadata);
 
+              const singleUserDocRef = doc(usersCol, address)
+
+              const singleUserDoc = await getDoc(singleUserDocRef)
+              const singleUser = singleUserDoc.data()
+              let score = 0
+              if (singleUser) {
+                console.log(singleUser.userId)
+                score = singleUser.score
+              }  
+              else{
+                await setDoc(singleUserDocRef, {
+                  userId : address,
+                  name:address,
+                  score:0
+                })
+              }
+
               {
                     try {
                         await runChecks(req, VALID_PARCEL)
-                        return res.status(200).send({ valid: true, msg: 'Valid request' })
+                        return res.status(200).send({ valid: true, msg: 'Valid request',score:score })
                     } catch (error) {
                         console.log(error)
                         return res
